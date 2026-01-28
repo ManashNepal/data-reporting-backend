@@ -3,12 +3,14 @@ from datetime import datetime, timedelta
 from jose import jwt
 import os 
 from dotenv import load_dotenv
+import secrets
 
 load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 pwd_context = CryptContext(
     schemes = ["bcrypt"],
@@ -28,3 +30,9 @@ def create_access_token(data : dict, expires_delta : timedelta | None = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm = ALGORITHM)
 
     return encoded_jwt
+
+def create_refresh_token() -> str:
+    return secrets.token_urlsafe(64) # 64 bytes token str
+
+def get_refresh_token_expiry():
+    return datetime.utcnow + timedelta(days = REFRESH_TOKEN_EXPIRE_DAYS)

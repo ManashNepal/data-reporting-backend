@@ -1,6 +1,7 @@
 from app.auth.auth_service import create_user, login
 from fastapi import HTTPException, status
-from app.auth.security import create_access_token
+from app.auth.security import create_access_token, create_refresh_token, get_refresh_token_expiry
+from app.models.refresh_token import RefreshToken
 
 def signup_controller(db, user_data):
     user = create_user(db, user_data)
@@ -26,12 +27,45 @@ def login_controller(db, user_data):
             status_code = status.HTTP_401_UNAUTHORIZED,
             detail = "Incorrect Password!"
         )
-
+    # Access Token (JWT)
     access_token = create_access_token(
         data = {"sub" : str(user.id)}
     )
 
+    refresh_token = create_refresh_token()
+
+    # Store refresh token in DB
+    refresh_token_obj = RefreshToken(
+        token = refresh_token,
+        user_id = user.id,
+        expires_at = get_refresh_token_expiry()
+    )
+
+    db.add(refresh_token_obj)
+    db.commit()
+
     return {
         "access_token" : access_token,
+        "refresh_token" : refresh_token,
         "token_type" : "bearer"
+    }
+
+def refresh_controller(db, refresh_token_obj):
+    user_id = refresh_token_obj.user_id
+
+    access_token = create_access_token(
+        data = {"sub" : str(user_id)}
+    )
+
+    return {
+        "access_token" : access_token,
+        "token_type" : "bearer"     
+    }
+
+def logout_controller(db, refresh_token_obj):
+    db.delete(refresh_token_obj)
+    db.commit()
+
+    return {
+        "detail" : "Logged out successfully"
     }
