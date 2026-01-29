@@ -1,10 +1,13 @@
 from config.database import Base 
-from sqlalchemy import Column, Integer, String, Text, JSON 
+from sqlalchemy import Column, Integer, String, Text, JSON, ForeignKey 
 
-class Report_Columns(Base):
+class ReportColumn(Base):
     __tablename__ = "report_columns"
 
     id = Column(Integer, primary_key=True, index=True)
+
+    report_id = Column(Integer, ForeignKey("reports.id", ondelete = "CASCADE"), nullable = False, index = True) 
+
     name = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
     

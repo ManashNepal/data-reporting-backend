@@ -1,21 +1,32 @@
 from pydantic import BaseModel, ConfigDict
 from typing import List, Optional, Dict, Any 
 
-# Base Schema
-class ReportBase(BaseModel):
-    title: str 
-    description: Optional[str] = None 
-    type: str 
-    interval: str 
-    status: str 
-    slug: str 
+class ReportCreate(BaseModel):
+    title : str 
+    description : Optional[str] = None 
+    type : str
+    interval : str
+    status : str
     params: Optional[List[Dict[str, Any]]] = None
 
-class RequestSchema(ReportBase):
-    pass 
+class ReportResponse(BaseModel):
+    id : int 
+    title : str 
+    description : Optional[str] = None
 
-class ResponseSchema(ReportBase):
-    id: int 
+    type : str 
+    interval : str 
+    status : str 
+    slug : str
 
-    model_config = ConfigDict(from_attributes=True)
+    params : Optional[List[Dict[str, Any]]] = None
+
+class ReportColumnCreate(BaseModel):
+    name : str 
+    description : Optional[str] = None 
+    status : str 
+    query : Optional[str] = None 
+    connection_id : str 
+    params : Optional[List[Dict[str, Any]]] = None
+
     
