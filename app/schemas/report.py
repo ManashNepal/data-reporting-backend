@@ -1,51 +1,83 @@
-from pydantic import BaseModel, ConfigDict
-from typing import List, Optional, Dict, Any 
+from pydantic import BaseModel, ConfigDict, StringConstraints, Field
+from typing import List, Optional, Dict, Any
+from typing_extensions import Annotated  
+from config.validation import (
+    ReportType,
+    ReportInterval,
+    ReportStatus
+)
+
+TitleStr = Annotated[
+    str, 
+    StringConstraints(min_length = 3, max_length = 255)
+]
+
+NameStr = Annotated[
+    str, 
+    StringConstraints(min_length = 3, max_length = 255)
+]
+
+DescriptionStr = Annotated[
+    str, 
+    StringConstraints(max_length = 1000)
+]
 
 class ReportCreate(BaseModel):
-    title : str 
-    description : Optional[str] = None 
-    type : str
-    interval : str
-    status : str
-    params: Optional[List[Dict[str, Any]]] = None
+    title : TitleStr 
+    description : Optional[DescriptionStr] = None 
+    type : ReportType
+    interval : ReportInterval
+    status : ReportStatus
+    params: Optional[Dict[str, Any]] = None
 
 class ReportResponse(BaseModel):
     id : int 
-    title : str 
-    description : Optional[str] = None
+    title : TitleStr 
+    description : Optional[DescriptionStr] = None
 
-    type : str 
-    interval : str 
-    status : str 
+    type : ReportType 
+    interval : ReportInterval 
+    status : ReportStatus 
     slug : str
 
-    params : Optional[List[Dict[str, Any]]] = None
+    params : Optional[Dict[str, Any]] = None
+
+    model_config = ConfigDict(from_attributes = True)
 
 class ReportUpdate(BaseModel):
-    title : Optional[str] = None  
-    description : Optional[str] = None
+    title : Optional[TitleStr] = None  
+    description : Optional[DescriptionStr] = None
 
-    type : Optional[str] = None 
-    interval : Optional[str] = None 
-    status : Optional[str] = None 
-    slug : Optional[str] = None
+    type : Optional[ReportType] = None 
+    interval : Optional[ReportInterval] = None 
+    status : Optional[ReportStatus] = None
 
-    params : Optional[List[Dict[str, Any]]] = None
+    params : Optional[Dict[str, Any]] = None
 
 class ReportColumnCreate(BaseModel):
-    name : str 
-    description : Optional[str] = None 
-    status : str 
+    name : NameStr 
+    description : Optional[DescriptionStr] = None 
+    status : ReportStatus 
     query : Optional[str] = None 
     connection_id : str 
-    params : Optional[List[Dict[str, Any]]] = None
 
 class ReportColumnUpdate(BaseModel):
-    name : Optional[str] = None
-    description : Optional[str] = None 
-    status : Optional[str] = None 
+    name : Optional[NameStr] = None
+    description : Optional[DescriptionStr] = None 
+    status : Optional[ReportStatus] = None 
     query : Optional[str] = None 
     connection_id : Optional[str] = None 
-    params : Optional[List[Dict[str, Any]]] = None
 
+class ReportColumnResponse(BaseModel):
+    id : int 
+    name : NameStr 
+    description : Optional[DescriptionStr] = None 
+    status : ReportStatus
+    query : Optional[str] = None 
+    connection_id : Optional[str] = None 
+
+    model_config = ConfigDict(from_attributes = True) 
+
+    
+    
     

@@ -1,4 +1,7 @@
 from pydantic import BaseModel, EmailStr, ConfigDict
+from typing import Optional
+
+from config.validation import UserRole
 
 class UserBase(BaseModel):
     email : EmailStr
@@ -15,14 +18,14 @@ class UserLogin(UserBase):
 class UserResponse(BaseModel):
     id : int 
     email : EmailStr
-    role : str 
-    isactive: bool
+    role : UserRole 
+    is_active: bool
 
     model_config = ConfigDict(from_attributes = True)
 
 class Token(BaseModel):
     access_token : str 
-    refresh_token : str
+    refresh_token : Optional[str] = None
     token_type : str
 
 

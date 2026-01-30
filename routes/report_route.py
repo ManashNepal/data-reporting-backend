@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from config.database import get_db
 from app.schemas.report import ReportCreate, ReportResponse, ReportUpdate
-from app.schemas.report import ReportColumnCreate, ReportColumnUpdate
+from app.schemas.report import ReportColumnCreate, ReportColumnUpdate, ReportColumnResponse
 from app.auth.dependencies import get_current_user
 from app.controller.report_controller import (
     create_report_controller, 
@@ -21,7 +21,7 @@ from app.controller.report_column_controller import (
     delete_report_column_controller
 )
 
-router = APIRouter()
+router = APIRouter(tags = ["Reports"])
 
 # CREATE
 @router.post("/reports", response_model = ReportResponse)
@@ -52,21 +52,22 @@ def delete_report(report_id : int, db : Session = Depends(get_db), current_user 
 # ----------------- Report Column ------------------
 
 # CREATE
-@router.post("/reports/{report_id}/columns")
+@router.post("/reports/{report_id}/columns", response_model = ReportColumnResponse)
 def create_report_column(payload : ReportColumnCreate, report_id : int, db : Session = Depends(get_db), current_user = Depends(get_current_user)):
     return create_report_column_controller(db, payload, current_user, report_id)
 
 #READ
-@router.get("/reports/{report_id}/columns")
+@router.get("/reports/{report_id}/columns", response_model = list[ReportColumnResponse])
 def read_report_column(report_id : int, db : Session = Depends(get_db), current_user = Depends(get_current_user)):
     return read_report_column_controller(db, report_id, current_user)
 
-@router.get("/reports/{report_id}/columns/{column_id}")
+# by id
+@router.get("/reports/{report_id}/columns/{column_id}", response_model = ReportColumnResponse)
 def read_report_column_by_id(report_id : int, column_id : int, db : Session = Depends(get_db), current_user = Depends(get_current_user)):
     return read_report_column_by_id_controller(db, report_id, column_id, current_user)
 
 #UPDATE
-@router.put("/report_column/{column_id}")
+@router.put("/report_column/{column_id}", response_model = ReportColumnResponse)
 def update_report_column(column_id : int, payload : ReportColumnUpdate, db : Session = Depends(get_db), current_user = Depends(get_current_user)):
     return update_report_column_controller(db, payload, column_id, current_user)
 

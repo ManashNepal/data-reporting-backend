@@ -1,6 +1,7 @@
 from config.database import Base 
+
 from sqlalchemy import Column, Integer, DateTime, String, Text, JSON, ForeignKey
-import datetime
+from datetime import datetime
 
 class Reports(Base):
     __tablename__ = "reports"
