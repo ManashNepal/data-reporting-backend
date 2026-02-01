@@ -27,7 +27,7 @@ router = APIRouter(tags = ["Reports"])
 # CREATE
 @router.post("/reports", response_model = ReportResponse)
 def create_report(payload: ReportCreate, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
-    report = create_report_controller(db, payload.dict(), current_user)
+    report = create_report_controller(db, payload, current_user)
     return report
 
 # READ
@@ -68,14 +68,14 @@ def read_report_column_by_id(report_id : int, column_id : int, db : Session = De
     return read_report_column_by_id_controller(db, report_id, column_id, current_user)
 
 #UPDATE
-@router.put("/report_column/{column_id}", response_model = ReportColumnResponse)
-def update_report_column(column_id : int, payload : ReportColumnUpdate, db : Session = Depends(get_db), current_user = Depends(get_current_user)):
-    return update_report_column_controller(db, payload, column_id, current_user)
+@router.put("/reports/{report_id}/columns/{column_id}", response_model = ReportColumnResponse)
+def update_report_column(report_id : int, column_id : int, payload : ReportColumnUpdate, db : Session = Depends(get_db), current_user = Depends(get_current_user)):
+    return update_report_column_controller(db, payload, report_id, column_id, current_user)
 
 #DELETE
-@router.delete("/report_column/{column_id}")
-def delete_report_column(column_id : int, db : Session = Depends(get_db), current_user = Depends(get_current_user)):
-    return delete_report_column_controller(db, column_id, current_user)
+@router.delete("/reports/{report_id}/columns/{column_id}")
+def delete_report_column(report_id : int, column_id : int, db : Session = Depends(get_db), current_user = Depends(get_current_user)):
+    return delete_report_column_controller(db, report_id, column_id, current_user)
 
 
 # ADMIN - ONLY ROUTES

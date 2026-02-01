@@ -35,4 +35,4 @@ def create_refresh_token() -> str:
     return secrets.token_urlsafe(64) # 64 bytes token str
 
 def get_refresh_token_expiry():
-    return datetime.utcnow + timedelta(days = REFRESH_TOKEN_EXPIRE_DAYS)
+    return datetime.utcnow() + timedelta(days = REFRESH_TOKEN_EXPIRE_DAYS)

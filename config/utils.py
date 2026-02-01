@@ -12,11 +12,13 @@ def get_owned_report(db, report_id, user_id):
     report = db.query(Reports).filter(
         Reports.id == report_id,
         Reports.user_id == user_id
-    )
+    ).first()
+    return report
 
-def get_owned_column(db, user_id, column_id):
+def get_owned_column(db, user_id, report_id, column_id):
     report = db.query(ReportColumn).join(Reports, ReportColumn.report_id == Reports.id).filter(
         ReportColumn.id == column_id,
+        ReportColumn.report_id == report_id,
         Reports.user_id == user_id
     ).first()
 

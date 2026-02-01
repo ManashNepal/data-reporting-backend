@@ -12,7 +12,7 @@ def create_report_service(db: Session, payload: ReportCreate, user_id : int):
         title = payload.title,
         description = payload.description,
         type = payload.type,
-        interval = payload.type,
+        interval = payload.interval,
         status = payload.status,
         slug = generate_slug(payload.title)
     )
@@ -62,7 +62,7 @@ def delete_report(db, report_id, user_id):
     ).first()
 
     if not report:
-        return None
+        return "NO REPORT"
 
     db.delete(report)
     db.commit()

@@ -11,15 +11,15 @@ from config.utils import get_owned_column
 
 # CREATE
 def create_report_column_controller(db, payload, current_user, report_id):
-    report = create_report_column(db, payload, report_id, current_user.id)
+    column = create_report_column(db, payload, report_id, current_user.id)
 
-    if report is None:
+    if column is None:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
             detail = "Report not found"
         )
     
-    return report
+    return column
 
 # READ
 def read_report_column_controller(db, report_id, current_user, limit, offset):
@@ -45,8 +45,8 @@ def read_report_column_by_id_controller(db, report_id, column_id, current_user):
     return report_column
 
 # UPDATE
-def update_report_column_controller(db, payload, column_id, current_user):
-    column = get_owned_column(db, current_user.id, column_id)
+def update_report_column_controller(db, payload, report_id, column_id, current_user):
+    column = get_owned_column(db, current_user.id, report_id, column_id)
 
     if not column:
         raise HTTPException(
@@ -57,8 +57,8 @@ def update_report_column_controller(db, payload, column_id, current_user):
     return update_report_column(db, column, payload)
 
 # DELETE
-def delete_report_column_controller(db, column_id, current_user):
-    column = get_owned_column(db, current_user.id, column_id)
+def delete_report_column_controller(db, report_id, column_id, current_user):
+    column = get_owned_column(db, current_user.id, report_id, column_id)
 
     if not column:
         raise HTTPException(

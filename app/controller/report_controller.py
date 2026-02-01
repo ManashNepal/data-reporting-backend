@@ -39,7 +39,7 @@ def update_report_controller(db, report_id, current_user, payload):
 def delete_report_controller(db, report_id, current_user):
     report = delete_report(db, report_id, current_user.id)
 
-    if report is None:
+    if report == "NO REPORT":
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
             detail = "Report not Found"
