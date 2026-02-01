@@ -15,7 +15,7 @@ def get_report_controller(db, current_user, limit, offset):
     return get_my_reports(db, current_user.id, limit, offset)
 
 def get_report_by_id_controller(db, current_user, report_id):
-    report = get_report_by_id(db, current_user.id, report_id)
+    report = get_report_by_id(db, current_user, report_id)
     if not report:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,

@@ -4,7 +4,8 @@ from sqlalchemy.orm import Session
 from config.database import get_db
 from app.schemas.report import ReportCreate, ReportResponse, ReportUpdate
 from app.schemas.report import ReportColumnCreate, ReportColumnUpdate, ReportColumnResponse
-from app.auth.dependencies import get_current_user
+from app.auth.dependencies import get_current_user, require_admin
+from app.models.reports import Reports
 from app.controller.report_controller import (
     create_report_controller, 
     get_report_controller, 
@@ -75,3 +76,9 @@ def update_report_column(column_id : int, payload : ReportColumnUpdate, db : Ses
 @router.delete("/report_column/{column_id}")
 def delete_report_column(column_id : int, db : Session = Depends(get_db), current_user = Depends(get_current_user)):
     return delete_report_column_controller(db, column_id, current_user)
+
+
+# ADMIN - ONLY ROUTES
+@router.get("/admin/reports", response_model = list[ReportResponse])
+def get_all_reports(limit : int  = Query(10, ge = 1, le = 100), offset : int = Query(0, ge = 0), db : Session = Depends(get_db), admin  = Depends(require_admin)):
+    return db.query(Reports).order_by(Reports.id.desc()).offset(offset).limit(limit).all()

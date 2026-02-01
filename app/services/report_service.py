@@ -1,6 +1,7 @@
 from app.schemas.report import ReportCreate
 from app.models.reports import Reports
 from config.utils import generate_slug
+from config.validation import UserRole
 
 from sqlalchemy.orm import Session
 
@@ -25,11 +26,16 @@ def create_report_service(db: Session, payload: ReportCreate, user_id : int):
 def get_my_reports(db : Session, user_id : int, limit : int, offset : int):
     return db.query(Reports).filter(Reports.user_id == user_id).order_by(Reports.id.desc()).offset(offset).limit(limit).all()
 
-def get_report_by_id(db : Session, user_id : int, report_id : int):
-    return db.query(Reports).filter(
-        Reports.id == report_id,
-        Reports.user_id == user_id
-    ).first()
+def get_report_by_id(db : Session, current_user, report_id : int):
+    query = db.query(Reports).filter(
+        Reports.id == report_id
+    )
+
+    if current_user.role != UserRole.admin:
+        query = query.filter(Reports.user_id == current_user.id)
+    
+    return query.first()
+
 
 # UPDATE
 def update_report(db, report_id, user_id, payload):
