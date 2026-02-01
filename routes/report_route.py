@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from config.database import get_db
@@ -31,8 +31,8 @@ def create_report(payload: ReportCreate, db: Session = Depends(get_db), current_
 
 # READ
 @router.get("/reports", response_model = list[ReportResponse])
-def get_reports(db : Session = Depends(get_db), current_user = Depends(get_current_user)):
-    report = get_report_controller(db, current_user)
+def get_reports(limit : int = Query(10, ge = 1, le = 100), offset : int = Query(0, ge = 0), db : Session = Depends(get_db), current_user = Depends(get_current_user)):
+    report = get_report_controller(db, current_user, limit, offset)
     return report
 
 @router.get("/reports/{report_id}", response_model = ReportResponse)
@@ -58,8 +58,8 @@ def create_report_column(payload : ReportColumnCreate, report_id : int, db : Ses
 
 #READ
 @router.get("/reports/{report_id}/columns", response_model = list[ReportColumnResponse])
-def read_report_column(report_id : int, db : Session = Depends(get_db), current_user = Depends(get_current_user)):
-    return read_report_column_controller(db, report_id, current_user)
+def read_report_column(report_id : int, limit : int  = Query(10, ge = 1, le = 100), offset : int = Query(0, ge = 0), db : Session = Depends(get_db), current_user = Depends(get_current_user)):
+    return read_report_column_controller(db, report_id, current_user, limit, offset)
 
 # by id
 @router.get("/reports/{report_id}/columns/{column_id}", response_model = ReportColumnResponse)

@@ -20,7 +20,7 @@ def create_report_column(db, payload, report_id, user_id):
     return column
 
 # READ
-def read_report_column(db, report_id, user_id):
+def read_report_column(db, report_id, user_id, limit, offset):
     report = get_owned_report(db, report_id, user_id)
 
     if not report:
@@ -28,7 +28,7 @@ def read_report_column(db, report_id, user_id):
     
     report_column = db.query(ReportColumn).filter(
         ReportColumn.report_id == report.id
-    ).all()
+    ).order_by(ReportColumn.id.desc()).offset(offset).limit(limit).all()
 
     return report_column
 

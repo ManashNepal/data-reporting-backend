@@ -22,8 +22,8 @@ def create_report_column_controller(db, payload, current_user, report_id):
     return report
 
 # READ
-def read_report_column_controller(db, report_id, current_user):
-    report_column = read_report_column(db, report_id, current_user.id)
+def read_report_column_controller(db, report_id, current_user, limit, offset):
+    report_column = read_report_column(db, report_id, current_user.id, limit, offset)
 
     if report_column is None:
         raise HTTPException(

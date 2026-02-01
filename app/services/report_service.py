@@ -22,8 +22,8 @@ def create_report_service(db: Session, payload: ReportCreate, user_id : int):
     return report
 
 # READ
-def get_my_reports(db : Session, user_id : int):
-    return db.query(Reports).filter(Reports.user_id == user_id).all()
+def get_my_reports(db : Session, user_id : int, limit : int, offset : int):
+    return db.query(Reports).filter(Reports.user_id == user_id).order_by(Reports.id.desc()).offset(offset).limit(limit).all()
 
 def get_report_by_id(db : Session, user_id : int, report_id : int):
     return db.query(Reports).filter(

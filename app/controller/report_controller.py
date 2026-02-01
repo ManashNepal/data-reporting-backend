@@ -11,8 +11,8 @@ def create_report_controller(db, payload, current_user):
     return create_report_service(db, payload, current_user.id)  
 
 # READ
-def get_report_controller(db, current_user):
-    return get_my_reports(db, current_user.id)
+def get_report_controller(db, current_user, limit, offset):
+    return get_my_reports(db, current_user.id, limit, offset)
 
 def get_report_by_id_controller(db, current_user, report_id):
     report = get_report_by_id(db, current_user.id, report_id)
