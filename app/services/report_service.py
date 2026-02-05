@@ -14,7 +14,8 @@ def create_report_service(db: Session, payload: ReportCreate, user_id : int):
         type = payload.type,
         interval = payload.interval,
         status = payload.status,
-        slug = generate_slug(payload.title)
+        slug = generate_slug(payload.title),
+        params = payload.params
     )
     db.add(report)
     db.commit()
