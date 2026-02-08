@@ -12,6 +12,13 @@ from routes.connection_route import router as connection_router
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+@app.get("/")
+def health():
+    return{
+        "status" : "API working!"
+    }
+
 app.include_router(report_router)
 app.include_router(auth_router)
 app.include_router(query_router)

@@ -14,5 +14,5 @@ class ReportColumn(Base):
     status = Column(String(50))
     query = Column(Text)
     
-    connection_id = Column(String(255))
+    connection_id = Column(JSON, nullable = True)
 

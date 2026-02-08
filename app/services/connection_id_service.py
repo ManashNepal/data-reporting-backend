@@ -3,10 +3,11 @@ from app.models.connection_id import ConnectionID
 from fastapi import HTTPException, status
 
 # CREATE
-def create_connection_id_service(payload, db):
+def create_connection_id_service(payload, db, current_user):
     connection = ConnectionID(
         connection_name = payload.connection_name,
-        connection_id = payload.connection_id
+        connection_id = payload.connection_id,
+        user_id = current_user.id
     )
 
     db.add(connection)
@@ -16,23 +17,22 @@ def create_connection_id_service(payload, db):
     return connection
 
 # READ
-def read_connection_id_service(db, connection_name):
-    connection = db.query(ConnectionID).filter(
-        ConnectionID.connection_name == connection_name
-    ).all()
+def read_connection_id_service(db, current_user):
+    connection = db.query(ConnectionID).filter(ConnectionID.user_id == current_user.id).all()
 
-    if not connection:
-        raise HTTPException(
-            status_code = status.HTTP_404_NOT_FOUND,
-            detail = "No connection with such connection name"
-        )
+    # if not connection:
+    #     raise HTTPException(
+    #         status_code = status.HTTP_404_NOT_FOUND,
+    #         detail = "No connection with such connection name"
+    #     )
     
     return connection
 
 # UPDATE
-def update_connection_id_service(payload, db, connection_name):
+def update_connection_id_service(payload, db, connection_name, current_user):
     connection = db.query(ConnectionID).filter(
-        ConnectionID.connection_name == connection_name
+        ConnectionID.connection_name == connection_name,
+        ConnectionID.user_id == current_user.id
     ).first()
 
     if not connection:
@@ -49,9 +49,10 @@ def update_connection_id_service(payload, db, connection_name):
 
     return connection
 
-def delete_connection_id_service(db, connection_name):
+def delete_connection_id_service(db, connection_name, current_user):
     connection = db.query(ConnectionID).filter(
-        ConnectionID.connection_name == connection_name
+        ConnectionID.connection_name == connection_name,
+        ConnectionID.user_id == current_user.id
     ).first()
 
     if not connection:
@@ -62,4 +63,8 @@ def delete_connection_id_service(db, connection_name):
     
     db.delete(connection)
     db.commit()
+
+    return {
+        "detail" : "Connection removed successfully!"
+    }
 
