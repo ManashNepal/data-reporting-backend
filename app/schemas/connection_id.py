@@ -10,6 +10,7 @@ class ConnectionUpdate(BaseModel):
     connection_id : Optional[str] = None 
 
 class ConnectionResponse(BaseModel):
+    id : int
     connection_name : str 
     connection_id : str 
 

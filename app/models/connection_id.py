@@ -14,7 +14,7 @@ class ConnectionID(Base):
     connection_id = Column(String(1024), nullable = False)
     
     __table_args__ = (
-        UniqueConstraint(user_id, connection_name, name = "unique_user_connection_name")
+        UniqueConstraint(user_id, connection_name, name = "unique_user_connection_name"),   
     )
     
     created_at = Column(DateTime, default = datetime.utcnow) 
