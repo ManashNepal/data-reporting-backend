@@ -16,7 +16,10 @@ class ReportColumnQuery(Base):
     source_type = Column(String(50), nullable = False)
     connection_key = Column(String(255), nullable = False)
 
-    query = Column(Text, nullable = False)
+    query = Column(JSON, nullable = False)
+
+    database_name = Column(String(255), nullable=True)
+    collection_name = Column(String(255), nullable=True)
 
     param_mapping = Column(JSON, nullable = True) # maps reports.params -> query
 

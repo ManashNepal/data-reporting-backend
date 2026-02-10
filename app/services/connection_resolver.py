@@ -4,7 +4,7 @@ from fastapi import HTTPException, status
 from sqlalchemy import create_engine
 from pymongo import MongoClient
 
-def resolve_sql_connection(connection_name, db, user_id):
+def resolve_sql_connection(db, user_id, connection_name):
     connection = db.query(ConnectionID).filter(
         ConnectionID.connection_name == connection_name,
         ConnectionID.user_id == user_id
@@ -29,14 +29,15 @@ def resolve_mongo_connection(db, user_id, connection_name, database_name, collec
     connection = db.query(ConnectionID).filter(
         ConnectionID.connection_name == connection_name,
         ConnectionID.user_id == user_id
-    )
+    ).first()
 
     if not connection:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
             detail = "Connection not found!"
         )
-    
+    print("Resolver user_id:", user_id)
+    print("Connection found:", connection)
     try:
         client = MongoClient(connection.connection_id)
         return client[database_name][collection_name]
