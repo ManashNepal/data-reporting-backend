@@ -12,7 +12,7 @@ class ReportColumn(Base):
     description = Column(Text, nullable=True)
     
     status = Column(String(50))
-    query = Column(Text)
+    # query = Column(Text)
     
-    connection_id = Column(JSON, nullable = True)
+    # connection_id = Column(JSON, nullable = True)
 

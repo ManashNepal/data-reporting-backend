@@ -57,24 +57,18 @@ class ReportUpdate(BaseModel):
 class ReportColumnCreate(BaseModel):
     name : NameStr 
     description : Optional[DescriptionStr] = None 
-    status : ReportStatus 
-    query : Optional[str] = None 
-    connection_id : Dict[str, str] 
+    status : ReportStatus  
 
 class ReportColumnUpdate(BaseModel):
     name : Optional[NameStr] = None
     description : Optional[DescriptionStr] = None 
     status : Optional[ReportStatus] = None 
-    query : Optional[str] = None 
-    connection_id : Optional[Dict[str, str]] = None
 
 class ReportColumnResponse(BaseModel):
     id : int 
     name : NameStr 
     description : Optional[DescriptionStr] = None 
-    status : ReportStatus
-    query : Optional[str] = None 
-    connection_id : Optional[Dict[str, str]] = None 
+    status : ReportStatus 
 
     model_config = ConfigDict(from_attributes = True) 
 
